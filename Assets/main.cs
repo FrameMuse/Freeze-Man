@@ -16,36 +16,15 @@ public class Main : MonoBehaviour
   void Start()
   {
     // print(keyCodeRewire.retrieveCache("KeyboardRewire"));
-    Observer.Subscribe(KeyboardEventType.KeyboardKeyDown, onKeyDown);
+    // Observer.Subscribe(KeyboardEventType.KeyboardKeyDown, onKeyDown);
   }
 
   public static void rewire()
   {
-    keyCodeRewire.set(KeyCode.Mouse0, KeyCode.W);
+    // keyCodeRewire.set(KeyCode.Mouse0, KeyCode.W);
     // print(keyCodeRewire.cache("KeyboardRewire", true));
 
     print("Rewired!");
-  }
-
-  void onKeyDown(object payload)
-  {
-    if (payload.GetType() != typeof(KeyCode)) return;
-
-    // Transform
-    KeyCode keyCode = (KeyCode)payload;
-    // Rewire
-    keyCode = keyCodeRewire.get(keyCode);
-
-    if (keyCode == currentKeyCode)
-    {
-      currentKeyCode = randomKeyCode();
-      Key.text = Enum.GetName(typeof(KeyCode), currentKeyCode).ToUpper();
-
-      modifyHP(5);
-      return;
-    }
-
-    modifyHP(-25);
   }
 
   void modifyHP(int by)
