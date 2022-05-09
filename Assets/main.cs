@@ -1,42 +1,51 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
+using Palmmedia.ReportGenerator.Core.Common;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class main : MonoBehaviour
+public class Main : MonoBehaviour
 {
   public TextMeshProUGUI Key;
   public TextMeshProUGUI HP;
-  string key = "w";
+  KeyCode currentKeyCode = KeyCode.W;
   int hp = 100;
-  // Start is called before the first frame update
+  static KeyCodeRewire keyCodeRewire = new KeyCodeRewire();
   void Start()
   {
-    print("Start");
+    // print(keyCodeRewire.retrieveCache("KeyboardRewire"));
+    Observer.Subscribe(KeyboardEventType.KeyboardKeyDown, onKeyDown);
   }
 
-
-  void OnGUI()
+  public static void rewire()
   {
+    keyCodeRewire.set(KeyCode.Mouse0, KeyCode.W);
+    // print(keyCodeRewire.cache("KeyboardRewire", true));
 
-    if (Input.anyKeyDown)
-    {
-      handleAnyKeyDown();
-    }
+    print("Rewired!");
   }
 
-  void handleAnyKeyDown()
+  void onKeyDown(object payload)
   {
-    if (Input.GetKeyDown(key))
-    {
-      key = randomKeyCode();
-      Key.text = key.ToUpper();
+    if (payload.GetType() != typeof(KeyCode)) return;
 
-      modifyHP(1);
+    // Transform
+    KeyCode keyCode = (KeyCode)payload;
+    // Rewire
+    keyCode = keyCodeRewire.get(keyCode);
+
+    if (keyCode == currentKeyCode)
+    {
+      currentKeyCode = randomKeyCode();
+      Key.text = Enum.GetName(typeof(KeyCode), currentKeyCode).ToUpper();
+
+      modifyHP(5);
       return;
     }
 
-    modifyHP(-5);
+    modifyHP(-25);
   }
 
   void modifyHP(int by)
@@ -49,46 +58,80 @@ public class main : MonoBehaviour
     HP.text = hp.ToString();
   }
 
-  string randomKeyCode()
+  KeyCode randomKeyCode()
   {
-    int randomInt = RandomNumberGenerator.GetInt32(3);
+    int randomInt = RandomNumberGenerator.GetInt32(4);
     switch (randomInt)
     {
       case 0:
-        return "w";
+        return KeyCode.W;
       case 1:
-        return "a";
+        return KeyCode.A;
       case 2:
-        return "s";
+        return KeyCode.S;
+      case 3:
+        return KeyCode.D;
       default:
-        return "d";
+        return KeyCode.W;
     }
   }
+}
 
-  //   void onKeyPress(string key, Action callback)
-  //   {
-  //     if (Input.GetKey(key)) callback();
-  //   }
-  //   void onKeyPress(KeyCode key, Action callback)
-  //   {
-  //     if (Input.GetKeyDown(key)) callback();
-  //   }
+[Serializable]
+class KeyCodeRewire
+{
+  private Dictionary<KeyCode, KeyCode> customKeyCodes = new Dictionary<KeyCode, KeyCode>();
 
-  //   void OnGUI()
-  //   {
-  //     onKeyPress(KeyCode.W, () => move(0, 0, 0.01f));
-  //     onKeyPress(KeyCode.S, () => move(0, 0, -0.01f));
-  //     onKeyPress(KeyCode.A, () => move(-0.01f, 0, 0));
-  //     onKeyPress(KeyCode.D, () => move(0.01f, 0, 0));
-  //   }
+  public KeyCodeRewire() { }
+  public KeyCodeRewire(Dictionary<KeyCode, KeyCode> customKeyCodes)
+  {
+    this.customKeyCodes = new Dictionary<KeyCode, KeyCode>(customKeyCodes);
+  }
+  public KeyCode get(KeyCode keyCode)
+  {
+    if (customKeyCodes.ContainsKey(keyCode))
+      return customKeyCodes[keyCode];
 
-  //   void move(float x, float y, float z)
+    return keyCode;
+  }
+
+  public void set(KeyCode keyCode, KeyCode customKeyCode)
+  {
+    customKeyCodes[keyCode] = customKeyCode;
+    customKeyCodes[customKeyCode] = keyCode;
+  }
+  /// <summary>
+  /// Caches given values via PlayerPrefs using id
+  ///
+  /// Writes to disk if should
+  /// </summary>
+  // public string cache(string id, bool? shouldSave)
+  // {
+  //   string d = "{";
+  //   foreach (KeyValuePair<KeyCode, KeyCode> item in customKeyCodes)
   //   {
-  //     transform.position = new Vector3
-  //     {
-  //       x = transform.position.x + x,
-  //       y = transform.position.y + y,
-  //       z = transform.position.z + z
-  //     };
+  //     d += "\"" + item.Key + "\":" + "\"" + item.Value + "\",";
   //   }
+  //   d.Remove(d.Length - 1);
+  //   d += "}";
+
+  //   PlayerPrefs.SetString(id, d);
+  //   if (shouldSave.ConvertTo<bool>()) PlayerPrefs.Save();
+
+  //   return d;
+  // }
+
+  // public object retrieveCache(string id)
+  // {
+  //   if (!PlayerPrefs.HasKey(id)) return null;
+
+  //   string cache = PlayerPrefs.GetString(id);
+  //   Dictionary<KeyCode, KeyCode> cacheDictionary = JsonUtility.FromJson<Dictionary<KeyCode, KeyCode>>(cache);
+
+  //   if (cacheDictionary == null) return null;
+
+  //   customKeyCodes = new Dictionary<KeyCode, KeyCode>(cacheDictionary);
+
+  //   return cacheDictionary;
+  // }
 }
