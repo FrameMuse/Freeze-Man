@@ -2,7 +2,7 @@
 library
 Logs
 Temp
-obj
+# obj
 
 *.csproj
-*.sln
+# *.sln
