@@ -5,13 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class CharacterMove : MonoBehaviour
 {
-  public float maxVelocity = 5;
+  public float maxVelocity = 2;
   public RuntimeAnimatorController IdleAnimationController;
   public RuntimeAnimatorController WalkAnimationController;
   public RuntimeAnimatorController RunAnimationController;
   private new Rigidbody rigidbody;
   private Animator animator;
   float multiplier = 0.001f;
+  public bool Awake;
 
   void Start()
   {
@@ -21,6 +22,8 @@ public class CharacterMove : MonoBehaviour
 
   void Update()
   {
+    rigidbody.WakeUp();
+    Awake = !rigidbody.IsSleeping();
     // Address move events
     onAxesUpdate();
   }
@@ -61,12 +64,12 @@ public class CharacterMove : MonoBehaviour
 
   void animate(Vector3 accelerationAxes)
   {
-    // Run
-    if (accelerationAxes.magnitude > 0.5)
-    {
-      animator.runtimeAnimatorController = RunAnimationController;
-      return;
-    }
+    // // Run
+    // if (accelerationAxes.magnitude > 0.5)
+    // {
+    //   animator.runtimeAnimatorController = RunAnimationController;
+    //   return;
+    // }
 
     // Walk
     if (accelerationAxes.magnitude > 0)
