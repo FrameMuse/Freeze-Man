@@ -5,14 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class CharacterMove : MonoBehaviour
 {
+  public float maxVelocity = 5;
+  public RuntimeAnimatorController IdleAnimationController;
+  public RuntimeAnimatorController WalkAnimationController;
+  public RuntimeAnimatorController RunAnimationController;
   private new Rigidbody rigidbody;
-  // private Animator animator;
+  private Animator animator;
   float multiplier = 0.001f;
 
   void Start()
   {
     rigidbody = GetComponent<Rigidbody>();
-    // animator = GetComponent<Animator>();
+    animator = GetComponent<Animator>();
   }
 
   void Update()
@@ -35,8 +39,8 @@ public class CharacterMove : MonoBehaviour
   /// </summary>
   void move(Vector3 accelerationAxes)
   {
-    // transform.position += accelerationAxes * (multiplier + Time.deltaTime);
-    rigidbody.AddForce(accelerationAxes * 50);
+    if (rigidbody.velocity.magnitude >= maxVelocity) return;
+    rigidbody.AddForce(Vector3.Normalize(accelerationAxes) * 15);
   }
 
   /// <summary>
@@ -57,26 +61,26 @@ public class CharacterMove : MonoBehaviour
 
   void animate(Vector3 accelerationAxes)
   {
-    // // Run
-    // if (accelerationAxes.magnitude > 0.5)
-    // {
-    //   animator.runtimeAnimatorController = Resources.Load("Assets/Kevin Iglesias/Giant Animations/AnimatorControllers/Giant@RunForward.controller") as RuntimeAnimatorController;
-    //   return;
-    // }
+    // Run
+    if (accelerationAxes.magnitude > 0.5)
+    {
+      animator.runtimeAnimatorController = RunAnimationController;
+      return;
+    }
 
     // Walk
-    // if (accelerationAxes.magnitude > 0)
-    // {
-    //   animator.runtimeAnimatorController = Resources.Load("Assets/Kevin Iglesias/Giant Animations/AnimatorControllers/Giant@WalkForward.controller") as RuntimeAnimatorController;
-    //   return;
-    // }
+    if (accelerationAxes.magnitude > 0)
+    {
+      animator.runtimeAnimatorController = WalkAnimationController;
+      return;
+    }
 
-    // // Idle
-    // if (accelerationAxes.magnitude == 0)
-    // {
-    //   animator.runtimeAnimatorController = Resources.Load("Assets/Kevin Iglesias/Giant Animations/AnimatorControllers/Giant@Idles.controller") as RuntimeAnimatorController;
-    //   return;
-    // }
+    // Idle
+    if (accelerationAxes.magnitude == 0)
+    {
+      animator.runtimeAnimatorController = IdleAnimationController;
+      return;
+    }
   }
   // private void OnDrawGizmos()
   // {
