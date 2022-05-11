@@ -1,14 +1,18 @@
 using UnityEngine;
 
+[AddComponentMenu("Character Move")]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
 public class CharacterMove : MonoBehaviour
 {
   private new Rigidbody rigidbody;
+  // private Animator animator;
   float multiplier = 0.001f;
 
   void Start()
   {
     rigidbody = GetComponent<Rigidbody>();
+    // animator = GetComponent<Animator>();
   }
 
   void Update()
@@ -16,53 +20,82 @@ public class CharacterMove : MonoBehaviour
     // Address move events
     onAxesUpdate();
   }
-
+  // private Vector3 accelerationAxes;
   void onAxesUpdate()
   {
-    Vector3 axes = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+    Vector3 accelerationAxes = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-    move(axes);
-    face(axes);
+    move(accelerationAxes);
+    face(accelerationAxes);
+    animate(accelerationAxes);
   }
 
   /// <summary>
   /// Translate character to a certain values
   /// </summary>
-  void move(Vector3 moveAxes)
+  void move(Vector3 accelerationAxes)
   {
-    transform.position += moveAxes * (multiplier + Time.deltaTime);
+    // transform.position += accelerationAxes * (multiplier + Time.deltaTime);
+    rigidbody.AddForce(accelerationAxes * 50);
   }
 
   /// <summary>
   /// Rotate character's body to a certain direction
   /// </summary>
-  void face(Vector3 faceAxes)
+  void face(Vector3 accelerationAxes)
   {
-    float angle = 0;
-    bool toLeft = faceAxes.x < 0;
-    bool toRight = faceAxes.x > 0;
-    bool forward = faceAxes.z > 0;
-    bool backward = faceAxes.z < 0;
-    bool idle = faceAxes.x == 0 && faceAxes.z == 0;
+    if (accelerationAxes == Vector3.zero) return;
 
-    if (idle) return;
+    transform.rotation = Quaternion.Slerp(
+        transform.rotation,
+        Quaternion.LookRotation(accelerationAxes),
+        Time.deltaTime * 5f
+    );
 
-    if (toLeft) angle = -90;
-    if (toRight) angle = 90;
-    if (forward) angle = 0;
-    if (backward) angle = 180;
-
-    Vector3 nextEulerAngles = new(1 + Time.deltaTime, 0, 1 + Time.deltaTime);
-    transform.Rotate(nextEulerAngles);
+    // transform.LookAt(transform.position + accelerationAxes);
   }
 
-  // float prevAngle;
-  // void OnMouseDown()
+  void animate(Vector3 accelerationAxes)
+  {
+    // // Run
+    // if (accelerationAxes.magnitude > 0.5)
+    // {
+    //   animator.runtimeAnimatorController = Resources.Load("Assets/Kevin Iglesias/Giant Animations/AnimatorControllers/Giant@RunForward.controller") as RuntimeAnimatorController;
+    //   return;
+    // }
+
+    // Walk
+    // if (accelerationAxes.magnitude > 0)
+    // {
+    //   animator.runtimeAnimatorController = Resources.Load("Assets/Kevin Iglesias/Giant Animations/AnimatorControllers/Giant@WalkForward.controller") as RuntimeAnimatorController;
+    //   return;
+    // }
+
+    // // Idle
+    // if (accelerationAxes.magnitude == 0)
+    // {
+    //   animator.runtimeAnimatorController = Resources.Load("Assets/Kevin Iglesias/Giant Animations/AnimatorControllers/Giant@Idles.controller") as RuntimeAnimatorController;
+    //   return;
+    // }
+  }
+  // private void OnDrawGizmos()
   // {
-  //   Quaternion rotation = transform.rotation;
-  //   Vector3 eulerAngles = rotation.eulerAngles;
-  //   eulerAngles.z = 0;
-  //   rotation.eulerAngles = eulerAngles;
-  //   transform.rotation = rotation;
+  //   Gizmos.color = Color.red;
+  //   Gizmos.DrawRay(new Ray(transform.position + new Vector3(0, 0.5f), new Vector3(1, 0, 0)));
+  //   Gizmos.DrawRay(new Ray(transform.position + new Vector3(0, 0.5f), new Vector3(0, 0, 1)));
+
+  //   Gizmos.color = Color.blue;
+  //   Gizmos.DrawRay(new Ray(transform.position + new Vector3(0, 0.5f), accelerationAxes));
   // }
+
+  void OnMouseDown()
+  {
+    Quaternion rotation = transform.rotation;
+    Vector3 eulerAngles = rotation.eulerAngles;
+    eulerAngles.x = 0;
+    eulerAngles.y = 0;
+    eulerAngles.z = 0;
+    rotation.eulerAngles = eulerAngles;
+    transform.rotation = rotation;
+  }
 }

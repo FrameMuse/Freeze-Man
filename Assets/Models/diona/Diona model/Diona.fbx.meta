@@ -23,7 +23,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
-    importConstraints: 0
+    importConstraints: 1
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -510,6 +510,11 @@ ModelImporter:
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
+    - name: Body
+      parentName: Diona(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
     - name: Armature
       parentName: Diona(Clone)
       position: {x: -0, y: 0, z: 0}
@@ -638,7 +643,7 @@ ModelImporter:
     - name: Left arm
       parentName: Left shoulder
       position: {x: -1.094304e-10, y: 0.00056473986, z: 5.122274e-11}
-      rotation: {x: 0.071927525, y: 0.22133067, z: 0.022971151, w: 0.9722714}
+      rotation: {x: 0.07192752, y: 0.22133067, z: 0.02297115, w: 0.9722714}
       scale: {x: 1, y: 0.9999999, z: 1}
     - name: zArmTwist_L
       parentName: Left arm
@@ -673,17 +678,17 @@ ModelImporter:
     - name: Thumb0_L
       parentName: Left wrist
       position: {x: 4.4703483e-10, y: 0.00023312587, z: -9.3132255e-12}
-      rotation: {x: 0.056593522, y: 0.088713035, z: 0.0643005, w: 0.99236715}
+      rotation: {x: 0.056593526, y: 0.08871304, z: 0.06430051, w: 0.9923672}
       scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
     - name: Thumb1_L
       parentName: Thumb0_L
       position: {x: 5.9604643e-10, y: 0.00015139842, z: 3.9115547e-10}
-      rotation: {x: 0.008727518, y: 0.030540403, z: -0.020540314, w: 0.9992843}
+      rotation: {x: 0.008727519, y: 0.030540403, z: -0.020540316, w: 0.9992843}
       scale: {x: 0.99999994, y: 1.0000001, z: 1}
     - name: Thumb2_L
       parentName: Thumb1_L
       position: {x: -1.9557773e-10, y: 0.00014269089, z: 1.11758706e-10}
-      rotation: {x: -0.012932002, y: -0.10365175, z: 0.037956078, w: 0.993805}
+      rotation: {x: -0.012932003, y: -0.103651755, z: 0.03795608, w: 0.99380505}
       scale: {x: 0.99999994, y: 0.99999994, z: 1}
     - name: Thumb2_L_end
       parentName: Thumb2_L
@@ -858,7 +863,7 @@ ModelImporter:
     - name: MiddleFinger2_R
       parentName: MiddleFinger1_R
       position: {x: -9.720679e-11, y: 0.00018452841, z: -1.6298145e-11}
-      rotation: {x: 0.010958269, y: 0.014580689, z: -0.009033951, w: 0.9997928}
+      rotation: {x: 0.01095827, y: 0.014580689, z: -0.009033952, w: 0.9997928}
       scale: {x: 1, y: 1.0000001, z: 1.0000001}
     - name: MiddleFinger3_R
       parentName: MiddleFinger2_R
@@ -893,7 +898,7 @@ ModelImporter:
     - name: LittleFinger1_R
       parentName: Right wrist
       position: {x: -0.0001326184, y: 0.00009172497, z: 0.0003978537}
-      rotation: {x: 0.4558601, y: 0.22347312, z: 0.16500387, w: 0.8455915}
+      rotation: {x: 0.45586014, y: 0.22347313, z: 0.16500388, w: 0.84559155}
       scale: {x: 0.99999976, y: 0.99999994, z: 1.0000001}
     - name: LittleFinger2_R
       parentName: LittleFinger1_R
@@ -1163,7 +1168,7 @@ ModelImporter:
     - name: Skirt_2_5
       parentName: Skirt_1_5
       position: {x: -2.3283064e-12, y: 0.00031951183, z: -7.683411e-11}
-      rotation: {x: -0.08096298, y: 0.000626146, z: 0.0027550007, w: 0.9967131}
+      rotation: {x: -0.080962986, y: 0.000626146, z: 0.002755001, w: 0.9967131}
       scale: {x: 0.99999994, y: 0.9999999, z: 0.99999976}
     - name: Skirt_3_5
       parentName: Skirt_2_5
@@ -1510,11 +1515,6 @@ ModelImporter:
       position: {x: -0, y: 0.0004530927, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    - name: Body
-      parentName: Diona(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-      scale: {x: 100, y: 100, z: 100}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
