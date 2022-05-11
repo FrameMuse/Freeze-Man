@@ -4,5 +4,9 @@ Logs
 Temp
 # obj
 
+
 *.csproj
 # *.sln
+
+
+Assets/UMotionEditor
