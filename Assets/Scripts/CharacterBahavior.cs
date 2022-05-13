@@ -31,11 +31,11 @@ public class CharacterBahavior : MonoBehaviour
   void axesUpdate()
   {
     Vector3 inputAccelerationAxes = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-    // inputAccelerationAxes.Normalize();
+    inputAccelerationAxes.Normalize();
 
-    move(inputAccelerationAxes);
-    face(inputAccelerationAxes);
-    animate(inputAccelerationAxes);
+    // move(inputAccelerationAxes);
+    // face(inputAccelerationAxes);
+    // animate(inputAccelerationAxes);
   }
 
   /// <summary>
