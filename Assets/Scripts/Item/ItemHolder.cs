@@ -9,7 +9,6 @@ public class ItemHolder : MonoBehaviour
   [SerializeField]
   Vector3 offset;
   public bool isHolding { get => heldItem != null; }
-  Vector3 position;
   void Update()
   {
     if (!isHolding) return;
@@ -26,6 +25,7 @@ public class ItemHolder : MonoBehaviour
     // Remove halo
     // heldItem.OnOffHalo(false);
     heldItem.DisableCollider();
+    heldItem.DisableRigidbody();
   }
   public void ReleaseItem()
   {
@@ -33,14 +33,8 @@ public class ItemHolder : MonoBehaviour
     // heldItem.OnOffHalo(false);
     // Revert held item collider enabled state to its previous state
     heldItem.ReEnableCollider();
+    heldItem.ReEnableRigidbody();
     // Remove held item
     heldItem = null;
-  }
-
-  void OnDrawGizmos()
-  {
-    Gizmos.color = Color.red;
-    Gizmos.DrawSphere(position, 0.1f);
-    Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 5);
   }
 }

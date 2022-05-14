@@ -1,5 +1,3 @@
-using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [AddComponentMenu("Character/Character Movement")]
@@ -20,18 +18,12 @@ public class CharacterMovement : MonoBehaviour
   void Start()
   {
     characterController = GetComponent<CharacterController>();
-    // characterController.AddComponent<Rigidbody>();
-
-    // print(characterController.attachedRigidbody);
   }
 
   float maxRaycastDistance = 0.03f;
 
   void Update()
   {
-    // print(characterController.bounds.center);
-    // print(characterController.bounds.size);
-
     RaycastHit hitInfo;
     sloped = !Physics.Raycast(new Ray(transform.position, Vector3.down), out hitInfo, maxRaycastDistance);
 
