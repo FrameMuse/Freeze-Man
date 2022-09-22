@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [AddComponentMenu("Following Camera")]
@@ -7,11 +8,15 @@ public class FollowingCamera : MonoBehaviour
   [SerializeField]
   GameObject target;
   [SerializeField]
-  public float distanceToTarget = 10f;
+  float distanceToTarget = 10f;
   [SerializeField]
   Vector3 offset = new Vector3(0, 0, 0);
+  [SerializeField]
+  float floatingSpeed = 3f;
 
   Vector3 previousPosition;
+
+  Vector3 velocity = Vector3.zero;
 
   void Start()
   {
@@ -26,62 +31,38 @@ public class FollowingCamera : MonoBehaviour
 
     distanceToTarget -= Input.GetAxis("Mouse ScrollWheel");
   }
-
+  Vector3 asd;
+  Vector3 asd2;
+  public float smoothTime = 0.3F;
   void Follow()
   {
-    // float angleSpeed = 100 * Time.deltaTime;
-
     float xAxis = Input.GetAxis("Mouse X");
     float yAxis = Input.GetAxis("Mouse Y");
 
-    // float xRotation = (xAxis * angleSpeed);
-    // float yRotation = transform.localEulerAngles.x + (yAxis * angleSpeed);
 
-    // float xRotationClamped = xRotation;
-    // float yRotationClamped = Mathf.Clamp(yRotation, -60, 60);
+    Vector3 accelerationDirection = new(xAxis, yAxis);
+
+    float rotationAroundYAxis = accelerationDirection.x; // camera moves horizontally
+    float rotationAroundXAxis = -accelerationDirection.y; // camera moves vertically
+
+    // Debug.Log(new { asd2, target.transform.position });
 
 
-
-    // Vector3 newPosition = ScreenToViewportPoint(Input.mousePosition);
-    Vector3 direction = new(xAxis, yAxis);
-
-    float rotationAroundYAxis = direction.x; // camera moves horizontally
-    float rotationAroundXAxis = -direction.y; // camera moves vertically
-
-    transform.position = target.transform.position;
+    // Set target's position
+    // Vector3 targetPosition = target.transform.TransformPoint(new Vector3(0, 5, -10));
+    transform.position = Vector3.SmoothDamp(asd2, target.transform.position, ref velocity, smoothTime);
+    // transform.position = Vector3.SmoothDamp(asd2, target.transform.position, floatingSpeed * Time.deltaTime * ((asd2 - target.transform.position).magnitude));
+    asd2 = transform.position;
 
     transform.Rotate(Vector3.right, rotationAroundXAxis);
     transform.Rotate(Vector3.up, rotationAroundYAxis, Space.World); // <— This is what makes it work!
 
     transform.Translate(new Vector3(0, 0, -distanceToTarget) + offset);
 
+    // Clamping rotation x
     Vector3 euler = transform.rotation.eulerAngles;
-    euler.x = Mathf.Clamp(euler.x, 15, 65);
+    euler.x = Mathf.Clamp(euler.x, 5, 65);
     transform.rotation = Quaternion.Euler(euler);
-
-    // previousPosition = newPosition;
-
-
-
-    // transform.position = target.transform.position + offset;
-    // // transform.RotateAround(target.transform.position, Vector3.up, 20f * Time.deltaTime);
-    // transform.Rotate(Vector3.up, 20f * Time.deltaTime, Space.World);
-    // transform.LookAt(target.transform.position);
-
-
-    // Vector3 eulerAngles = new();
-    // eulerAngles += Quaternion.AngleAxis(xRotationClamped, Vector3.up).eulerAngles;
-    // eulerAngles += Quaternion.AngleAxis(yRotationClamped, Vector3.left).eulerAngles;
-
-    // transform.localRotation = Quaternion.Euler(eulerAngles);
-    // transform.localRotation = Quaternion.AngleAxis(yRotationClamped, Vector3.left);
-
-    // transform.LookAt(target.transform.position);
-
-    // transform.Translate()
-
-    // transform.RotateAround(target.transform.position, Vector3.up, (xAxis * angleSpeed));
-    // transform.RotateAround(target.transform.position, Vector3.left, (yAxis * angleSpeed));
   }
 
   void LockCursorIfNeeded()

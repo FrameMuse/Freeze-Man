@@ -10,14 +10,20 @@ public class ItemHolder : MonoBehaviour
   [SerializeField]
   Vector3 offset;
   public bool isHolding { get => heldItem != null; }
+  Vector3 velocity = Vector3.zero;
   void Update()
   {
     if (!isHolding) return;
     // When holding
-    heldItem.transform.position = Vector3.MoveTowards(heldItem.transform.position, transform.position + -offset, 0.05f);
-    heldItem.transform.eulerAngles = transform.rotation.eulerAngles;
+    MoveItemToPicker();
   }
 
+  void MoveItemToPicker()
+  {
+    // heldItem.transform.position = Vector3.MoveTowards(heldItem.transform.position, transform.position + offset, 0.05f);
+    heldItem.transform.position = Vector3.SmoothDamp(heldItem.transform.position, transform.position + offset, ref velocity, 0.3f);
+    heldItem.transform.eulerAngles = transform.rotation.eulerAngles;
+  }
 
   public void PickUpItem(ItemController item)
   {

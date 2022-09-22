@@ -35,10 +35,14 @@ public class ItemPicker : MonoBehaviour
   void Update()
   {
     if (Input.GetKeyDown(pickUpReleaseKey))
+    {
+      GetItems();
+
       if (itemHolder.isHolding)
         itemHolder.ReleaseItem();
       else
         PickUpClosestItem();
+    }
   }
 
   public void PickUpClosestItem()
