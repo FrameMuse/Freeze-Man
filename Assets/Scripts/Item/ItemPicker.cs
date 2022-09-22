@@ -2,6 +2,7 @@ using UnityEngine;
 
 [AddComponentMenu("Item/Item Picker")]
 [IconAttribute("Assets/Images/Icons/item-picker.svg")]
+[DisallowMultipleComponent]
 public class ItemPicker : MonoBehaviour
 {
   [SerializeField]
@@ -46,19 +47,25 @@ public class ItemPicker : MonoBehaviour
     {
       if (item.pickable == false) continue;
       if (item.bounds.Intersects(bounds))
+      {
         itemHolder.PickUpItem(item);
+        return;
+      }
     }
   }
 
-  public void HighlightClosestItem()
+  void HighlightClosestItem()
   {
     foreach (ItemController item in items)
     {
-      if (item.pickable == false) continue;
-      if (item.bounds.Intersects(bounds) && !itemHolder.isHolding)
-        item.OnOffHalo(true);
-      else
+      if (itemHolder.heldItem == item)
+      {
         item.OnOffHalo(false);
+        continue;
+      }
+
+      if (item.pickable == false) continue;
+      item.OnOffHalo(item.bounds.Intersects(bounds));
     }
   }
 

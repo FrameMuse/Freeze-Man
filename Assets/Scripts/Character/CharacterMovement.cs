@@ -2,6 +2,7 @@ using UnityEngine;
 
 [AddComponentMenu("Character/Character Movement")]
 [RequireComponent(typeof(CharacterController))]
+[DisallowMultipleComponent]
 public class CharacterMovement : MonoBehaviour
 {
   CharacterController characterController;
@@ -9,6 +10,8 @@ public class CharacterMovement : MonoBehaviour
   Vector3 velocity;
   [SerializeField]
   bool sloped;
+  [SerializeField]
+  float slopeDistance = 0.03f;
   [SerializeField]
   bool grounded;
   float playerSpeed = 2.0f;
@@ -20,12 +23,9 @@ public class CharacterMovement : MonoBehaviour
     characterController = GetComponent<CharacterController>();
   }
 
-  float maxRaycastDistance = 0.03f;
-
   void Update()
   {
-    RaycastHit hitInfo;
-    sloped = !Physics.Raycast(new Ray(transform.position, Vector3.down), out hitInfo, maxRaycastDistance);
+    sloped = !Physics.Raycast(new Ray(transform.position, Vector3.down), out RaycastHit hitInfo, slopeDistance);
 
     grounded = characterController.isGrounded;
     if (grounded && velocity.y < 0)
@@ -54,6 +54,6 @@ public class CharacterMovement : MonoBehaviour
   void OnDrawGizmos()
   {
     Gizmos.color = Color.magenta;
-    Gizmos.DrawRay(transform.position, Vector3.down * maxRaycastDistance);
+    Gizmos.DrawRay(transform.position, Vector3.down * slopeDistance);
   }
 }

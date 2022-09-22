@@ -2,6 +2,7 @@ using UnityEngine;
 
 [AddComponentMenu("Item/Item Holder")]
 [IconAttribute("Assets/Images/Icons/item-holder.svg")]
+[DisallowMultipleComponent]
 public class ItemHolder : MonoBehaviour
 {
   [SerializeField]

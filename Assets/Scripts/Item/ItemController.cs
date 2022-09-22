@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [AddComponentMenu("Item/Item Controller")]
 [IconAttribute("Assets/Images/Icons/item.svg")]
 [RequireComponent(typeof(Renderer), typeof(Collider))]
+[DisallowMultipleComponent]
 public class ItemController : MonoBehaviour
 {
   [Header("Item settings")]
@@ -62,30 +62,5 @@ public class ItemController : MonoBehaviour
       attachedRenderer.material = Static.haloMeterial;
     else
       attachedRenderer.material = defaultMaterial;
-  }
-
-  public string lastTooltip = " ";
-  void OnGUI()
-  {
-    GUILayout.Button(new GUIContent("Play Game", "Button1"));
-    GUILayout.Button(new GUIContent("Quit", "Button2"));
-    if (Event.current.type == EventType.Repaint && GUI.tooltip != lastTooltip)
-    {
-      if (lastTooltip != "")
-        SendMessage(lastTooltip + "OnMouseOut", SendMessageOptions.DontRequireReceiver);
-
-      if (GUI.tooltip != "")
-        SendMessage(GUI.tooltip + "OnMouseOver", SendMessageOptions.DontRequireReceiver);
-
-      lastTooltip = GUI.tooltip;
-    }
-  }
-  void Button1OnMouseOver()
-  {
-    Debug.Log("Play game got focus");
-  }
-  void Button2OnMouseOut()
-  {
-    Debug.Log("Quit lost focus");
   }
 }
