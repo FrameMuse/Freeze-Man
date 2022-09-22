@@ -14,7 +14,7 @@ public class ItemHolder : MonoBehaviour
   {
     if (!isHolding) return;
     // When holding
-    heldItem.transform.position = transform.position + offset;
+    heldItem.transform.position = Vector3.MoveTowards(heldItem.transform.position, transform.position + -offset, 0.05f);
     heldItem.transform.eulerAngles = transform.rotation.eulerAngles;
   }
 

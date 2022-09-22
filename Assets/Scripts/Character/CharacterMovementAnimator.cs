@@ -27,12 +27,20 @@ public class CharacterMovementAnimator : MonoBehaviour
   {
     Vector3 accelerationAxes = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
+
     // Walk
     if (accelerationAxes.magnitude > 0)
     {
+      if (Input.GetKey(KeyCode.LeftShift))
+      {
+        animator.runtimeAnimatorController = runController;
+        return;
+      }
+
       animator.runtimeAnimatorController = walkController;
       return;
     }
+
 
     // Idle
     animator.runtimeAnimatorController = idleController;

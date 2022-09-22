@@ -14,17 +14,24 @@ public class CharacterMovement : MonoBehaviour
   float slopeDistance = 0.03f;
   [SerializeField]
   bool grounded;
-  float playerSpeed = 2.0f;
+  public float runSpeed = 400f;
+  public float walkSpeed = 200f;
   float jumpHeight = 1.0f;
   float gravityValue = -9.81f;
 
+  FollowingCamera followingCamera;
+
   void Start()
   {
+    followingCamera = FindObjectOfType<FollowingCamera>();
     characterController = GetComponent<CharacterController>();
   }
 
   void Update()
   {
+    float playerSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+
+
     sloped = !Physics.Raycast(new Ray(transform.position, Vector3.down), out RaycastHit hitInfo, slopeDistance);
 
     grounded = characterController.isGrounded;
@@ -33,13 +40,34 @@ public class CharacterMovement : MonoBehaviour
       velocity.y = 0f;
     }
 
-    Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-    characterController.Move(move * Time.deltaTime * playerSpeed);
+    float xAxis = Input.GetAxis("Horizontal");
+    float yAxis = Input.GetAxis("Vertical");
 
-    if (move != Vector3.zero)
+    Vector3 moveDirection = new(xAxis, 0, yAxis);
+    Vector3 lookDirection = followingCamera.GetLookDirection();
+
+    // float xAcceleration = xAxis * playerSpeed;
+    // float yAcceleration = yAxis * playerSpeed;
+
+    // Vector3 moveAxis = new(xAcceleration, 0, yAcceleration);
+    // characterController.SimpleMove(moveAxis * Time.deltaTime);
+
+    if (lookDirection != Vector3.zero)
     {
-      gameObject.transform.forward = move;
+      transform.forward = new(lookDirection.x, transform.forward.y, lookDirection.z);
     }
+
+    characterController.SimpleMove(transform.TransformDirection(moveDirection) * playerSpeed * Time.deltaTime);
+
+    if (moveDirection != Vector3.zero)
+    {
+      transform.forward = transform.TransformDirection(moveDirection);
+    }
+
+
+
+
+    // transform.Rotate(moveDirection);
 
     // Changes the height position of the player
     if (Input.GetButtonDown("Jump") && !sloped && grounded)
