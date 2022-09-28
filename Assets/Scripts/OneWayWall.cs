@@ -17,28 +17,28 @@ public class OneWayWall : MonoBehaviour
     Debug.Log(collision.collider.name);
 
 
-    // Physics.IgnoreCollision(collider, collision.collider);
-    // ignoredColliders.Add(collision.collider);
+    Physics.IgnoreCollision(collider, collision.collider);
+    ignoredColliders.Add(collision.collider);
   }
 
-  // void Update()
-  // {
-  //   if (clearColliders)
-  //   {
-  //     ClearIgnoredColliders();
+  void Update()
+  {
+    if (clearColliders)
+    {
+      ClearIgnoredColliders();
 
-  //     clearColliders = !clearColliders;
-  //   }
-  // }
+      clearColliders = !clearColliders;
+    }
+  }
 
-  // void ClearIgnoredColliders()
-  // {
-  //   ignoredColliders.ForEach(UnignoredCollider);
-  //   ignoredColliders = new();
-  // }
+  void ClearIgnoredColliders()
+  {
+    ignoredColliders.ForEach(UnignoredCollider);
+    ignoredColliders = new();
+  }
 
-  // void UnignoredCollider(Collider ignoredCollider)
-  // {
-  //   Physics.IgnoreCollision(collider, ignoredCollider, false);
-  // }
+  void UnignoredCollider(Collider ignoredCollider)
+  {
+    Physics.IgnoreCollision(collider, ignoredCollider, false);
+  }
 }

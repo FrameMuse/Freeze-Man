@@ -14,7 +14,7 @@ public class CharacterMovementAnimator : MonoBehaviour
   [SerializeField]
   RuntimeAnimatorController runController;
   [SerializeField]
-  RuntimeAnimatorController slackController;
+  RuntimeAnimatorController stopController;
 
   Animator animator;
 
@@ -25,10 +25,9 @@ public class CharacterMovementAnimator : MonoBehaviour
 
   void Update()
   {
+    animator.speed = speed;
     Vector3 accelerationAxes = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-
-    // Walk
     if (accelerationAxes.magnitude > 0)
     {
       if (Input.GetKey(KeyCode.LeftShift))

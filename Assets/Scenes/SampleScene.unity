@@ -517,6 +517,7 @@ GameObject:
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
+  - component: {fileID: 963194231}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -543,12 +544,12 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 2
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
+  m_FocalLength: 12
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -557,7 +558,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -603,7 +604,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7627286482179237045}
-  position: {x: 0, y: 2, z: -2}
+  distanceToTarget: 2
+  offset: {x: 0, y: 0.5, z: 0}
+  smoothTime: 0.1
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -664,6 +667,19 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!135 &963194231
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &979153366
 GameObject:
   m_ObjectHideFlags: 0
@@ -1280,7 +1296,7 @@ Animator:
   m_Avatar: {fileID: 9000000, guid: 071ec31e789eed145845ecd254cbec19, type: 3}
   m_Controller: {fileID: 9100000, guid: 75cabacce08bf8742838e3b2c01b2166, type: 2}
   m_CullingMode: 1
-  m_UpdateMode: 1
+  m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -1304,7 +1320,7 @@ CharacterController:
   m_SlopeLimit: 45
   m_StepOffset: 0.1
   m_SkinWidth: 0.0001
-  m_MinMoveDistance: 0.0001
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.5975, z: 0}
 --- !u!114 &7627286482179237053
 MonoBehaviour:
@@ -1318,10 +1334,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6eccbe11c0ac504b969678697beffe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runSpeed: 3
+  walkSpeed: 1.5
+  jumpHeight: 3.5
   velocity: {x: 0, y: 0, z: 0}
-  sloped: 0
-  slopeDistance: 0.03
-  grounded: 0
+  gravityValue: -9.81
+  mass: 1
+  airborne: 0
+  slopeSpherePosition: {x: 0, y: 0, z: 0}
+  slopeSphereRadius: 0.01
 --- !u!114 &7627286482179237054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1336,7 +1357,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemHolder: {fileID: 1428353906}
   pickUpReleaseKey: 101
-  extents: {x: 0.75, y: 0.75, z: 0.75}
+  extents: {x: 2, y: 0.75, z: 2}
   center: {x: 0, y: 0.75, z: 0}
 --- !u!114 &7627286482179237055
 MonoBehaviour:
@@ -1350,9 +1371,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d40e1e125fdb52a45bb6bd0688dca1dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  idleController: {fileID: 9100000, guid: 63eb92215e0688d4d923afc35e2656ce, type: 2}
-  walkController: {fileID: 9100000, guid: 3f81b88ef7348784790fcc0e1aaad12d, type: 2}
+  speed: 1.5
+  idleController: {fileID: 9100000, guid: a8555c0cff30527479e32562cef9141f, type: 2}
+  walkController: {fileID: 9100000, guid: 75d3a58b3d7879f41926561701407a48, type: 2}
   runController: {fileID: 9100000, guid: 6b665610312a01f4a8e7bafbfb2b6b49, type: 2}
   slackController: {fileID: 9100000, guid: a8555c0cff30527479e32562cef9141f, type: 2}
 --- !u!1 &8164078558176945724

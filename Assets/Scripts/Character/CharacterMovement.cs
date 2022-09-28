@@ -6,20 +6,26 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
   CharacterController characterController;
+  FollowingCamera followingCamera;
+
+
+  public float runSpeed = 4f;
+  public float walkSpeed = 2f;
+  public float jumpHeight = 1.0f;
+
+  [Header("Gravity")]
   [SerializeField]
   Vector3 velocity;
   [SerializeField]
-  bool sloped;
-  [SerializeField]
-  float slopeDistance = 0.03f;
-  [SerializeField]
-  bool grounded;
-  public float runSpeed = 400f;
-  public float walkSpeed = 200f;
-  float jumpHeight = 1.0f;
   float gravityValue = -9.81f;
+  public float mass = 1f;
+  [SerializeField]
+  bool airborne;
+  [SerializeField]
+  Vector3 slopeSpherePosition;
+  [SerializeField]
+  float slopeSphereRadius = 0.1f;
 
-  FollowingCamera followingCamera;
 
   void Start()
   {
@@ -29,59 +35,70 @@ public class CharacterMovement : MonoBehaviour
 
   void Update()
   {
-    float playerSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+    MoveAndRotate();
+    HandleJumping();
+    ApplyGravity();
+  }
 
-
-    sloped = !Physics.Raycast(new Ray(transform.position, Vector3.down), out RaycastHit hitInfo, slopeDistance);
-
-    grounded = characterController.isGrounded;
-    if (grounded && velocity.y < 0)
+  float playerSpeed
+  {
+    get
     {
-      velocity.y = 0f;
-    }
+      float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
 
+      if (airborne) return speed * 0.1f;
+      return speed;
+    }
+  }
+
+  void MoveAndRotate()
+  {
     float xAxis = Input.GetAxis("Horizontal");
     float yAxis = Input.GetAxis("Vertical");
 
     Vector3 moveDirection = new(xAxis, 0, yAxis);
     Vector3 lookDirection = followingCamera.GetLookDirection();
 
-    // float xAcceleration = xAxis * playerSpeed;
-    // float yAcceleration = yAxis * playerSpeed;
-
-    // Vector3 moveAxis = new(xAcceleration, 0, yAcceleration);
-    // characterController.SimpleMove(moveAxis * Time.deltaTime);
-
-    if (lookDirection != Vector3.zero)
-    {
-      transform.forward = new(lookDirection.x, transform.forward.y, lookDirection.z);
-    }
-
-    characterController.SimpleMove(transform.TransformDirection(moveDirection) * playerSpeed * Time.deltaTime);
-
     if (moveDirection != Vector3.zero)
     {
-      transform.forward = transform.TransformDirection(moveDirection);
+
+      moveDirection = followingCamera.transform.rotation * moveDirection;
+      moveDirection.Normalize();
+      moveDirection.y = 0;
+      // if (lookDirection != Vector3.zero)
+      //   transform.forward = followingCamera.transform.rotation * new Vector3(lookDirection.x, transform.forward.y, lookDirection.z);
+
+      // Vector3 transformedMoveDirection = transform.TransformDirection(moveDirection);
+
+      transform.forward = moveDirection;
+      characterController.Move(moveDirection * playerSpeed * Time.deltaTime);
     }
+  }
 
+  void HandleJumping()
+  {
+    if (Input.GetButtonDown("Jump") && !airborne)
+      velocity.y += jumpHeight;
+  }
 
-
-
-    // transform.Rotate(moveDirection);
-
-    // Changes the height position of the player
-    if (Input.GetButtonDown("Jump") && !sloped && grounded)
+  void ApplyGravity()
+  {
+    airborne = !Physics.CheckSphere(transform.position + slopeSpherePosition, slopeSphereRadius);
+    if ((characterController.isGrounded || !airborne) && velocity.y < 0)
     {
-      velocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+      ApplyGravityImpact(velocity);
+      velocity.y = 0f;
     }
 
     velocity.y += gravityValue * Time.deltaTime;
     characterController.Move(velocity * Time.deltaTime);
   }
 
+  void ApplyGravityImpact(Vector3 velocity) { }
+
   void OnDrawGizmos()
   {
     Gizmos.color = Color.magenta;
-    Gizmos.DrawRay(transform.position, Vector3.down * slopeDistance);
+    Gizmos.DrawSphere(transform.position + slopeSpherePosition, slopeSphereRadius);
   }
 }
